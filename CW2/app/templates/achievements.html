@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="achievements-container">
+    <h1>Your Achievements</h1>
+
+    <!-- Summary Section -->
+    <div class="summary">
+        <h3>Summary</h3>
+        <p><strong>Total Achievements Unlocked:</strong> {{ unlocked_count }}/{{ total_count }}</p>
+        <p>Completion: {{ unlocked_percentage | round(2) | default(0) }}%</p>
+        <progress id="completion-progress" value="{{ unlocked_percentage | default(0) }}" max="100">
+            {{ unlocked_percentage | default(0) }}%
+        </progress>
+    </div>
+
+    <hr class="custom-hr">
+
+    <!-- Achievements Section -->
+    <div class="achievements-grid">
+        {% for achievement, user_achievement in user_achievements %}
+            <div class="achievement-card {{ 'unlocked' if user_achievement.completed else 'locked' }}">
+                <h3>{{ achievement.name }}</h3>
+                <p>{{ achievement.description }}</p>
+                {% if user_achievement.completed %}
+                    <p class="status">Status: <span class="badge unlocked">Unlocked!</span></p>
+                {% else %}
+                    <p class="progress-text">Progress: {{ user_achievement.progress | default(0) }}/{{ achievement.points_required | default(1) }}</p>
+                    <div class="progress-bar-container">
+                        <progress value="{{ user_achievement.progress }}" max="{{ achievement.points_required }}"></progress>
+                    </div>
+                    <p class="status">Status: <span class="badge locked">Locked</span></p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

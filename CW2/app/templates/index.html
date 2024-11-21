@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-row">
+    <h2>{{ username if username else "Guest" }}</h2>
+    <div class="score-display">Current Score: {{ current_score }}</div>
+</div>
+<h3>Current Question:</h3>
+<div class="math-problem-container">
+    <span id="math-problem">\( {{ problem | safe if problem else "Error" }} \)</span>
+</div>
+
+<hr class="custom-hr">
+
+<h3>
+    {% if feedback %}
+        <!-- Show the Next Question button if feedback is present -->
+        <form method="POST" action="{{ url_for('next_question') }}">
+            <button type="submit" class="btn">Next Question</button>
+        </form>
+    {% else %}
+        <!-- Show the Submit Answer form if feedback is not present -->
+        <label for="answer">Submit Your Answer:</label>
+        <form method="POST" action="{{ url_for('check_answer') }}">
+            <input type="text" id="answer" name="answer" placeholder="Enter your answer here" required>
+            <button type="submit" class="btn">Submit Answer</button>
+        </form>
+    {% endif %}
+</h3>
+
+{% if feedback %}
+    <!-- Feedback Section -->
+    <div class="feedback {{ 'success' if feedback.status == 'success' else 'error' }}">
+        <p>{{ feedback.message }}</p>
+        {% if feedback.user_answer and feedback.correct_answer %}
+            <p>Your Answer: {{ feedback.user_answer }}</p>
+            <p>Correct Answer: {{ feedback.correct_answer }}</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+<div class="note centered-note">
+    <p>For questions with variables, only provide your answer as a number (e.g., for \(9x + 6 = 8\), just type the value of \(x\)).</p>
+    <p>For fraction-based questions, you can enter your answer as a fraction (e.g., 3/4) or a decimal (e.g., 0.75).</p>
+</div>
+{% endblock %}

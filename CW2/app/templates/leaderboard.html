@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="leaderboard-title">Leaderboard</h2>
+<ol class="leaderboard-list">
+    {% for user in users %}
+        <li>{{ user.username }} - {{ user.score }} points</li>
+    {% endfor %}
+</ol>
+{% endblock %}
