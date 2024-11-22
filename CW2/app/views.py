@@ -71,38 +71,28 @@ def landing():
 @app.route("/index")
 @login_required
 def index():
-    # Check if a problem is already stored in the session
-    problem = session.get('problem')
-    solution = session.get('solution')
+    # Check if feedback is present
+    feedback = session.get('feedback')
 
-    # Generate a new problem only if there is no problem in the session
-    if not problem or not solution:
+    # Generate a new question only if feedback is absent
+    if not feedback:
         problem_index = random.choice(selected_generator_ids)
         problem, solution = genById(problem_index)
 
         # Strip LaTeX markers ($) from the problem
         problem = problem.replace("$", "")
 
-        # Store the new problem and solution in the session
+        # Store the problem and solution in the session for validation
         session['problem'] = problem
         session['solution'] = str(solution)
-
-    # Determine if the problem contains variables or fractions
-    contains_variable = 'x' in problem
-    contains_fraction = '/' in problem or '\\frac' in problem
-
-    # Retrieve feedback and the show_next flag from the session
-    feedback = session.pop('feedback', None)  # Use pop to clear feedback after retrieval
-    show_next = session.pop('show_next', False)  # Show the Next Question button if set
 
     return render_template(
         "index.html",
         username=current_user.username,
-        problem=problem,
+        problem=session['problem'],
         feedback=feedback,
-        show_next=show_next,
-        show_variable_note=contains_variable,
-        show_fraction_note=contains_fraction,
+        show_variable_note='x' in session['problem'],
+        show_fraction_note='/' in session['problem'] or '\\frac' in session['problem'],
         current_score=current_user.leaderboard.score if current_user.leaderboard else 0
     )
 

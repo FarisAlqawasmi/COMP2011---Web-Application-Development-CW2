@@ -63,3 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+// Clear the answer input field on page load
+const answerInput = document.getElementById("answer");
+if (answerInput) {
+    answerInput.value = ""; // Clear the input field
+}
