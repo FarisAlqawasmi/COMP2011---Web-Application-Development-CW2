@@ -6,8 +6,8 @@ from app.forms import RegisterForm, LoginForm, SolveMathForm
 from mathgenerator import genById
 from sympy import sympify
 from werkzeug.security import generate_password_hash, check_password_hash
-import random
 import re
+import random
 
 
 selected_generator_ids = [0, 1, 2, 3, 6, 8, 11, 12, 13, 28, 31]  # Your desired generator IDs
