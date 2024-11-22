@@ -4,10 +4,11 @@ from app import app, db
 from app.models import Leaderboard, User, Achievement, UserAchievement
 from app.forms import RegisterForm, LoginForm, SolveMathForm
 from mathgenerator import genById
-import random
 from sympy import sympify
-import re
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
+import re
+
 
 selected_generator_ids = [0, 1, 2, 3, 6, 8, 11, 12, 13, 28, 31]  # Your desired generator IDs
 
