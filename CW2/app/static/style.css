@@ -453,3 +453,24 @@ input:focus {
 input:invalid {
     border-color: #34495e; /* Change invalid border to blue */
 }
+
+/* Navigation bar styling for smaller screens */
+@media (max-width: 768px) {
+    nav .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Center the buttons */
+        gap: 10px; /* Add spacing between buttons */
+    }
+
+    nav .container h1 {
+        flex-basis: 100%; /* Ensure the title spans the full width */
+        text-align: center;
+        margin-bottom: 10px; /* Add some space below the title */
+    }
+
+    nav .container .btn-nav {
+        flex: 1 1 calc(50% - 10px); /* Each button takes 50% of the row minus the gap */
+        text-align: center; /* Center the text inside the button */
+    }
+}
