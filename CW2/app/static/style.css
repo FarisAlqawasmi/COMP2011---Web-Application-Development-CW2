@@ -460,7 +460,7 @@ input:invalid {
         display: flex;
         flex-wrap: wrap; /* Allows wrapping to the next row */
         justify-content: center; /* Center-align the buttons */
-        gap: 10px; /* Adds spacing between buttons */
+        gap: 5px; /* Adds spacing between buttons */
         padding: 10px; /* Optional: Adds padding to the navbar */
     }
 
