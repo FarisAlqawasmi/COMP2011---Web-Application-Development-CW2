@@ -42,12 +42,8 @@ class UserAchievement(db.Model):
     user = db.relationship('User', back_populates='achievements')
     achievement = db.relationship('Achievement', back_populates='users')
 
-# Add a helper method to track achievement unlocking
     @staticmethod
     def update_or_create(user_id, achievement_id, increment=1):
-        """
-        Update progress for an achievement or create it if it doesn't exist.
-        """
         user_achievement = UserAchievement.query.filter_by(
             user_id=user_id, achievement_id=achievement_id
         ).first()
@@ -69,3 +65,29 @@ class UserAchievement(db.Model):
 
         db.session.commit()
         return None
+
+# Seed Achievements Function
+def seed_achievements():
+    """Populate the achievements table with predefined achievements."""
+    achievements = [
+        {"name": "Reach 10 Points", "description": "Earn a total of 10 points.", "points_required": 10},
+        {"name": "Reach 100 Points", "description": "Earn a total of 100 points.", "points_required": 100},
+        {"name": "Reach 1000 Points", "description": "Earn a total of 1000 points.", "points_required": 1000},
+        {"name": "Make 10 Mistakes", "description": "Submit 10 incorrect answers.", "points_required": 10},
+        {"name": "Make 100 Mistakes", "description": "Submit 100 incorrect answers.", "points_required": 100},
+        {"name": "Make 1000 Mistakes", "description": "Submit 1000 incorrect answers.", "points_required": 1000},
+        {"name": "Get 10 Points in a Row", "description": "Earn 10 points consecutively without making a mistake.", "points_required": 10},
+        {"name": "Get 100 Points in a Row", "description": "Earn 100 points consecutively without making a mistake.", "points_required": 100},
+        {"name": "Get 1000 Points in a Row", "description": "Earn 1000 points consecutively without making a mistake.", "points_required": 1000},
+    ]
+
+    for achievement_data in achievements:
+        existing_achievement = Achievement.query.filter_by(name=achievement_data["name"]).first()
+        if not existing_achievement:
+            new_achievement = Achievement(
+                name=achievement_data["name"],
+                description=achievement_data["description"],
+                points_required=achievement_data["points_required"],
+            )
+            db.session.add(new_achievement)
+    db.session.commit()

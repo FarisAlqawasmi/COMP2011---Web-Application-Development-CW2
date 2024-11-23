@@ -18,7 +18,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # Define the user loader callback
-from app.models import User
+from app.models import User, seed_achievements
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -27,5 +27,9 @@ def load_user(user_id):
 # Initialize migrations
 migrate = Migrate(app, db)
 
-# Import views and models to register routes and initialize models
+# Import models and views to register routes and models
 from app import views, models
+
+# Seed achievements when the app starts
+with app.app_context():
+    seed_achievements()
