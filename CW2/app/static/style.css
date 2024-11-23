@@ -458,19 +458,23 @@ input:invalid {
 @media (max-width: 768px) {
     nav .container {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center; /* Center the buttons */
-        gap: 10px; /* Add spacing between buttons */
+        flex-wrap: wrap; /* Allows wrapping to the next row */
+        justify-content: center; /* Center-align the buttons */
+        gap: 10px; /* Adds spacing between buttons */
+        padding: 10px; /* Optional: Adds padding to the navbar */
     }
 
     nav .container h1 {
-        flex-basis: 100%; /* Ensure the title spans the full width */
+        flex-basis: 100%; /* Title spans the full width */
         text-align: center;
-        margin-bottom: 10px; /* Add some space below the title */
+        margin-bottom: 10px; /* Space below the title */
     }
 
-    nav .container .btn-nav {
-        flex: 1 1 calc(50% - 10px); /* Each button takes 50% of the row minus the gap */
-        text-align: center; /* Center the text inside the button */
+    nav .btn-nav {
+        flex: 1 1 calc(45% - 10px); /* Buttons take ~45% of the width with spacing */
+        text-align: center; /* Center-align button text */
+        padding: 10px 5px; /* Adjust padding for smaller buttons */
+        font-size: 14px; /* Slightly smaller font size */
+        margin: 5px; /* Add consistent margins */
     }
 }
