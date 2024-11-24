@@ -308,7 +308,7 @@ form div {
     gap: 10px; 
 }
 
-.achievement-card h3 {
+.achievement-card h2 {
     margin: 0 0 10px;
     font-size: 1.2em;
     color: #2c3e50;

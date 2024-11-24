@@ -6,7 +6,7 @@
 
     <!-- Summary Section -->
     <div class="summary">
-        <h3>Summary</h3>
+        <h2>Summary</h2>
         <p><strong>Total Achievements Unlocked:</strong> {{ unlocked_count }}/{{ total_count }}</p>
         <p>Completion: {{ unlocked_percentage | round(2) | default(0) }}%</p>
         <progress id="completion-progress" value="{{ unlocked_percentage | default(0) }}" max="100">
