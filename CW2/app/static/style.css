@@ -52,6 +52,11 @@ h1, h2, h3 {
     color: #2c3e50;
 }
 
+/*Challenge text styling*/
+.challenge-text {
+    color: #1a1a1a !important;
+}
+
 /* Custom HR Styling */
 .custom-hr {
     border: none; 
@@ -98,7 +103,8 @@ footer .container {
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
-    color: #7f8c8d;
+    color: #1a1a1a; /* Dark shade of grey for text */
+    font-size: 0.9rem; /* Ensure text is legible */
 }
 
 /* Form styling */
@@ -207,7 +213,7 @@ form div {
 /* Center and style the notes */
 .centered-note {
     text-align: center; 
-    color: #7d7d7d; 
+    color: #1a1a1a; 
     font-size: 0.9rem;
     line-height: 1.6; 
     margin-top: 20px; 

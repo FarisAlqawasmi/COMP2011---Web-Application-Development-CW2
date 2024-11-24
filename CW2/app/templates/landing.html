@@ -3,7 +3,7 @@
 {% block content %}
 <div class="landing-container">
     <h1>Welcome to Math Problem Generator!</h1>
-    <p>Challenge yourself with random math problems and improve your skills!</p>
+    <p class="challenge-text">Challenge yourself with random math problems and improve your skills!</p>
     <div class="landing-buttons">
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('index') }}" class="btn">Start Solving Problems</a>
