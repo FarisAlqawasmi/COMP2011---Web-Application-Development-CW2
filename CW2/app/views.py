@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, session
 from flask_login import login_required, current_user, login_user, logout_user
 from app import app, db
 from app.models import Leaderboard, User, Achievement, UserAchievement
-from app.forms import RegisterForm, LoginForm, SolveMathForm
+from app.forms import RegisterForm, LoginForm
 from mathgenerator import genById
 from sympy import sympify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,19 +10,22 @@ import re
 import random
 
 
-selected_generator_ids = [0, 1, 2, 3, 6, 8, 11, 12, 13, 28, 31]  # Your desired generator IDs
+# Your desired generator IDs
+selected_generator_ids = [
+    0, 1, 2, 3, 6, 8, 11, 12, 13, 28, 31
+]
+
 
 # Function to update achievements
 def update_achievements(type, value):
+    # Update user achievements based on the given type (score or mistakes).
     achievements = Achievement.query.all()
-    unlocked_achievements = []  # List to store newly unlocked achievements
-    
+    unlocked_achievements = []
     for achievement in achievements:
         user_achievement = UserAchievement.query.filter_by(
             user_id=current_user.id, achievement_id=achievement.id
         ).first()
 
-        # Create the UserAchievement if it doesn't exist
         if not user_achievement:
             user_achievement = UserAchievement(
                 user_id=current_user.id,
@@ -32,24 +35,25 @@ def update_achievements(type, value):
             )
             db.session.add(user_achievement)
 
-        # Handle achievement progress
-        if not user_achievement.completed:  # Only update progress if not already completed
+        # Update progress and mark as completed if requirements are met
+        if not user_achievement.completed:
             if type == "score" and "Points in a Row" in achievement.name:
-                if value > 0:  # Increment progress only for correct answers
+                if value > 0:
                     user_achievement.progress += value
-                else:  # Reset progress to 0 on a mistake
+                else:
                     user_achievement.progress = 0
             elif type == "score" and "Points" in achievement.name:
                 user_achievement.progress += value
-                user_achievement.progress = max(0, user_achievement.progress)  # Prevent negative progress
+                user_achievement.progress = max(0, user_achievement.progress)
             elif type == "mistakes" and "Mistakes" in achievement.name:
                 user_achievement.progress += value
-                user_achievement.progress = max(0, user_achievement.progress)  # Prevent negative progress
+                user_achievement.progress = max(0, user_achievement.progress)
 
             # Mark the achievement as completed if the requirement is met
             if user_achievement.progress >= achievement.points_required:
                 user_achievement.completed = True
-                unlocked_achievements.append(achievement.name)  # Add the achievement to the list
+                # Add the achievement to the list
+                unlocked_achievements.append(achievement.name)
 
     db.session.commit()
 
@@ -62,8 +66,9 @@ def update_achievements(type, value):
 
 @app.route("/")
 def landing():
+    # Landing page for unauthenticated users;
+    # redirects logged-in users to the main index.
     if current_user.is_authenticated:
-        # If you want logged-in users to still access the landing page, do not redirect
         return redirect(url_for("index"))
     return render_template("landing.html")
 
@@ -71,7 +76,10 @@ def landing():
 @app.route("/index")
 @login_required
 def index():
-    # Check if feedback is present
+    """
+    Main route for generating and solving math problems.
+    Displays the current problem and feedback from previous answers.
+    """
     feedback = session.get('feedback')
 
     # Generate a new question only if feedback is absent
@@ -91,9 +99,16 @@ def index():
         username=current_user.username,
         problem=session['problem'],
         feedback=feedback,
-        show_variable_note='x' in session['problem'],
-        show_fraction_note='/' in session['problem'] or '\\frac' in session['problem'],
-        current_score=current_user.leaderboard.score if current_user.leaderboard else 0
+        show_variable_note=(
+            'x' in session['problem']
+        ),
+        show_fraction_note=(
+            '/' in session['problem'] or '\\frac' in session['problem']
+        ),
+        current_score=(
+            current_user.leaderboard.score
+            if current_user.leaderboard else 0
+        )
     )
 
 
@@ -102,16 +117,24 @@ def index():
 def check_answer():
     print("check_answer route was called")  # Debug
     user_answer = request.form.get("answer")
-    correct_answer = session.get('solution')  # Retrieve the solution from the session
+    correct_answer = session.get('solution')
 
     # Debug prints
-    print(f"Raw User Answer: {user_answer}, Raw Correct Answer: {correct_answer}")
+    print(
+        f"Raw User Answer: {user_answer}, "
+        f"Raw Correct Answer: {correct_answer}"
+    )
 
     if user_answer and correct_answer:
         try:
-            # Preprocess the correct answer: Use regex to convert \frac{a}{b} to a/b
+            # Preprocess the correct answer:
+            # Use regex to convert \frac{a}{b} to a/b
             correct_answer = correct_answer.replace("$", "")
-            correct_answer = re.sub(r"\\frac\{(.*?)\}\{(.*?)\}", r"(\1)/(\2)", correct_answer)
+            correct_answer = re.sub(
+                r"\\frac\{(.*?)\}\{(.*?)\}",
+                r"(\1)/(\2)",
+                correct_answer
+            )
             print(f"Preprocessed Correct Answer: {correct_answer}")
 
             # Normalize answers
@@ -132,11 +155,14 @@ def check_answer():
                 'status': 'error',
                 'message': "Please enter a valid number as your answer."
             }
-            session['show_next'] = False  # Ensure we stay in "Submit Answer" mode
+            # Ensure we stay in "Submit Answer" mode
+            session['show_next'] = False
 
             # Deduct score and reset "Points in a Row" progress
             if current_user.leaderboard:
-                current_user.leaderboard.score = max(0, current_user.leaderboard.score - 1)
+                current_user.leaderboard.score = max(
+                    0, current_user.leaderboard.score - 1
+                )
             update_achievements("score", 0)  # Reset "Points in a Row"
             update_achievements("mistakes", 1)  # Increment "mistakes" progress
 
@@ -144,23 +170,27 @@ def check_answer():
             return redirect(url_for("index"))
 
         # Check correctness
-        if abs(user_answer_float - correct_answer_float) < 1e-9:  # Allow for minor floating-point differences
+        # Ensure we stay in "Submit Answer" mode
+        if abs(user_answer_float - correct_answer_float) < 1e-9:
             session['feedback'] = {
                 'status': 'success',
                 'message': "Correct! Well done.",
                 'user_answer': user_answer_clean,
                 'correct_answer': correct_answer_clean
             }
-            session['show_next'] = True  # Enable "Next Question" button
+            # Enable "Next Question" button
+            session['show_next'] = True
 
             # Update score for correct answer
             if current_user.leaderboard:
                 current_user.leaderboard.score += 1
-                update_achievements("score", 1)  # Increment achievements progress
+                update_achievements("score", 1)
             else:
-                leaderboard_entry = Leaderboard(user_id=current_user.id, score=1)
+                leaderboard_entry = Leaderboard(
+                    user_id=current_user.id, score=1
+                )
                 db.session.add(leaderboard_entry)
-                update_achievements("score", 1)  # Increment achievements progress
+                update_achievements("score", 1)
 
         else:
             session['feedback'] = {
@@ -169,11 +199,14 @@ def check_answer():
                 'user_answer': user_answer_clean,
                 'correct_answer': correct_answer_clean
             }
-            session['show_next'] = True  # Enable "Next Question" button even for incorrect answers
+            # Enable "Next Question" button even for incorrect answers
+            session['show_next'] = True
 
             # Deduct score for incorrect answer
             if current_user.leaderboard:
-                current_user.leaderboard.score = max(0, current_user.leaderboard.score - 1)
+                current_user.leaderboard.score = max(
+                    0, current_user.leaderboard.score - 1
+                )
                 update_achievements("score", 0)  # Reset "Points in a Row"
             update_achievements("mistakes", 1)  # Increment "mistakes" progress
 
@@ -188,11 +221,14 @@ def check_answer():
 
         # Deduct score for an invalid (empty) answer
         if current_user.leaderboard:
-            current_user.leaderboard.score = max(0, current_user.leaderboard.score - 1)
+            current_user.leaderboard.score = max(
+                0, current_user.leaderboard.score - 1
+            )
         update_achievements("score", 0)  # Reset "Points in a Row"
         update_achievements("mistakes", 1)  # Increment "mistakes" progress
 
-        db.session.commit()  # Commit changes to the database
+        # Commit changes to the database
+        db.session.commit()
 
     return redirect(url_for("index"))
 
@@ -218,7 +254,6 @@ def next_question():
     return redirect(url_for("index"))
 
 
-
 @app.route("/leaderboard")
 @login_required
 def leaderboard():
@@ -228,19 +263,25 @@ def leaderboard():
                       .all()
     return render_template("leaderboard.html", users=users)
 
+
 @app.route("/achievements")
 @login_required
 def achievements():
-    # Get all achievements from the database
+    """
+    Displays the user's achievements, their progress
+    and the percentage unlocked.
+    Links all predefined achievements to the user if not already linked.
+    """
     all_achievements = Achievement.query.all()
 
-    # Ensure each achievement is associated with the user in the UserAchievement table
+    # Ensure each achievement is associated with the user
+    # in the UserAchievement table
     for achievement in all_achievements:
         user_achievement = UserAchievement.query.filter_by(
             user_id=current_user.id, achievement_id=achievement.id
         ).first()
         if not user_achievement:
-            # If no association exists, create a new one with default progress
+            # Add a new association with default progress if it doesn't exist
             user_achievement = UserAchievement(
                 user_id=current_user.id,
                 achievement_id=achievement.id,
@@ -250,15 +291,29 @@ def achievements():
             db.session.add(user_achievement)
     db.session.commit()
 
-    # Query all achievements associated with the user
-    user_achievements = db.session.query(Achievement, UserAchievement) \
-        .join(UserAchievement, Achievement.id == UserAchievement.achievement_id) \
-        .filter(UserAchievement.user_id == current_user.id) \
+    # Query all user achievements and calculate statistics
+    user_achievements = (
+        db.session.query(Achievement, UserAchievement)
+        .join(
+            UserAchievement,
+            Achievement.id == UserAchievement.achievement_id
+        )
+        .filter(
+            UserAchievement.user_id == current_user.id
+        )
         .all()
+    )
 
     total_count = len(user_achievements)
-    unlocked_count = sum(1 for _, user_achievement in user_achievements if user_achievement.completed)
-    unlocked_percentage = (unlocked_count / total_count * 100) if total_count > 0 else 0
+    unlocked_count = sum(
+        1 for _, user_achievement in user_achievements
+        if user_achievement.completed
+    )
+    unlocked_percentage = (
+        (unlocked_count / total_count * 100)
+        if total_count > 0
+        else 0
+    )
 
     return render_template(
         "achievements.html",
@@ -268,23 +323,73 @@ def achievements():
         unlocked_percentage=unlocked_percentage
     )
 
+
 @app.route("/seed_achievements")
 def seed_achievements():
-    """Seed predefined achievements into the database."""
+    """
+    Seeds predefined achievements into the database
+    if they do not already exist.
+    Useful for initializing the system with default achievement data.
+    """
     achievements = [
-        {"name": "Reach 10 Points", "description": "Earn a total of 10 points.", "points_required": 10},
-        {"name": "Reach 100 Points", "description": "Earn a total of 100 points.", "points_required": 100},
-        {"name": "Reach 1000 Points", "description": "Earn a total of 1000 points.", "points_required": 1000},
-        {"name": "Make 10 Mistakes", "description": "Submit 10 incorrect answers.", "points_required": 10},
-        {"name": "Make 100 Mistakes", "description": "Submit 100 incorrect answers.", "points_required": 100},
-        {"name": "Make 1000 Mistakes", "description": "Submit 1000 incorrect answers.", "points_required": 1000},
-        {"name": "Get 10 Points in a Row", "description": "Earn 10 points consecutively without making a mistake.", "points_required": 10},
-        {"name": "Get 100 Points in a Row", "description": "Earn 100 points consecutively without making a mistake.", "points_required": 100},
-        {"name": "Get 1000 Points in a Row", "description": "Earn 1000 points consecutively without making a mistake.", "points_required": 1000},
+        {
+            "name": "Reach 10 Points",
+            "description": "Earn a total of 10 points.",
+            "points_required": 10,
+        },
+        {
+            "name": "Reach 100 Points",
+            "description": "Earn a total of 100 points.",
+            "points_required": 100,
+        },
+        {
+            "name": "Reach 1000 Points",
+            "description": "Earn a total of 1000 points.",
+            "points_required": 1000,
+        },
+        {
+            "name": "Make 10 Mistakes",
+            "description": "Submit 10 incorrect answers.",
+            "points_required": 10,
+        },
+        {
+            "name": "Make 100 Mistakes",
+            "description": "Submit 100 incorrect answers.",
+            "points_required": 100,
+        },
+        {
+            "name": "Make 1000 Mistakes",
+            "description": "Submit 1000 incorrect answers.",
+            "points_required": 1000,
+        },
+        {
+            "name": "Get 10 Points in a Row",
+            "description": (
+                "Earn 10 points consecutively without making a mistake."
+            ),
+            "points_required": 10,
+        },
+        {
+            "name": "Get 100 Points in a Row",
+            "description": (
+                "Earn 100 points consecutively without making a mistake."
+            ),
+            "points_required": 100,
+        },
+        {
+            "name": "Get 1000 Points in a Row",
+            "description": (
+                "Earn 1000 points consecutively without making a mistake."
+            ),
+            "points_required": 1000,
+        },
     ]
 
+    # Iterate over each achievement and add to the database if missing
     for achievement_data in achievements:
-        existing_achievement = Achievement.query.filter_by(name=achievement_data["name"]).first()
+        existing_achievement = Achievement.query.filter_by(
+            name=achievement_data["name"]
+        ).first()
         if not existing_achievement:
             new_achievement = Achievement(
                 name=achievement_data["name"],
@@ -295,6 +400,7 @@ def seed_achievements():
 
     db.session.commit()
     return "Achievements seeded successfully!"
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -307,29 +413,40 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user:
-            if check_password_hash(user.password, password):  # Verify the hashed password
+            # Verify the hashed password
+            if check_password_hash(user.password, password):
                 login_user(user)
                 flash("Logged in successfully.", "success")
                 return redirect(url_for("index"))
             else:
-                flash("The password you entered is incorrect. Please try again.", "error")
+                flash(
+                    "The password you entered is incorrect. "
+                    "Please try again.",
+                    "error"
+                )
                 return redirect(url_for("login"))
         else:
-            flash("The email entered is not found in our database. Perhaps you haven't registered?", "error")
+            flash(
+                "The email entered is not found in our database. "
+                "Perhaps you haven't registered?",
+                "error"
+            )
             return redirect(url_for("register"))
 
     return render_template("login.html", form=form)
+
 
 @app.route("/logout")
 @login_required
 def logout():
     # Clear flash messages and notifications from the session
     session.pop('notifications', None)
-    session.pop('_flashes', None)  # Clear any lingering flash messages
+    session.pop('_flashes', None)
 
     logout_user()
     flash("You have been logged out.", "success")
     return redirect(url_for("landing"))
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -352,9 +469,13 @@ def register():
 
             try:
                 # Use pbkdf2:sha256 as the hashing method
-                hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
+                hashed_password = generate_password_hash(
+                    password, method="pbkdf2:sha256"
+                )
                 print("Generated hash:", hashed_password)  # Debugging line
-                new_user = User(username=username, email=email, password=hashed_password)
+                new_user = User(
+                    username=username, email=email, password=hashed_password
+                )
                 db.session.add(new_user)
                 db.session.commit()
 
