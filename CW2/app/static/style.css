@@ -378,12 +378,13 @@ form div {
     background-color: #e6f7f1;
 }
 
+/* Unlocked badge with improved contrast */
 .unlocked .badge {
-    color: #fff; /* White text */
-    background-color: #169c80; /* Darker green for better contrast */
+    color: #ffffff; /* White text for maximum readability */
+    background-color: #0b5d44; /* A darker green for better contrast */
     padding: 5px 10px;
     border-radius: 15px;
-    font-weight: bold; /* Improved readability */
+    font-weight: bold;
 }
 
 .locked {
