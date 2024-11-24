@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Lora';
+    src:    url('/static/fonts/lora-variablefont_wght-webfont.woff2') format('woff2'),
+            url('/static/fonts/lora-variablefont_wght-webfont.woff') format('woff');
+    font_weight: normal;
+    font_style: normal;
+}
+
 /* General styling */
 body {
     font-family: Arial, sans-serif;
