@@ -406,11 +406,11 @@ def seed_achievements():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        email = form.email.data
+        username = form.username.data
         password = form.password.data
 
-        # Fetch the user by email
-        user = User.query.filter_by(email=email).first()
+        # Fetch the user by username
+        user = User.query.filter_by(username=username).first()
 
         if user:
             # Verify the hashed password
@@ -427,7 +427,7 @@ def login():
                 return redirect(url_for("login"))
         else:
             flash(
-                "The email entered is not found in our database. "
+                "The username entered is not found in our database. "
                 "Perhaps you haven't registered?",
                 "error"
             )

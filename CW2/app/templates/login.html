@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -7,14 +6,16 @@
     <form method="POST" action="{{ url_for('login') }}">
         {{ form.hidden_tag() }}
         <div>
-            <label for="email">Email:</label>
-            {{ form.email(class_='form-control', placeholder='Enter your email') }}
+            <label for="username">Username:</label>
+            {{ form.username(class="form-control", placeholder="Enter your username") }}
         </div>
         <div>
             <label for="password">Password:</label>
-            {{ form.password(class_='form-control', placeholder='Enter your password') }}
+            {{ form.password(class="form-control", placeholder="Enter your password") }}
         </div>
-        <button type="submit" class="btn">Login</button>
+        <div>
+            <button type="submit" class="btn login-btn">Log In</button>
+        </div>
     </form>
     <p>
         Don't have an account? 
