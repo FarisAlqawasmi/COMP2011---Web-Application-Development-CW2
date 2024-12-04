@@ -18,11 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
         deleteAccountButton.addEventListener("click", function (event) {
             const confirmDelete = confirm(deleteAccountButton.getAttribute("data-confirm"));
             if (confirmDelete) {
-                // If confirmed, submit the form programmatically
                 const form = deleteAccountButton.closest("form");
                 form.submit();
             } else {
-                // Prevent form submission if the user cancels
                 event.preventDefault();
             }
         });
@@ -44,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (flashMessagesContainer) {
         const flashMessages = flashMessagesContainer.querySelectorAll(".alert");
         flashMessages.forEach((message) => {
-            // Default behavior for normal flash messages
             setTimeout(() => {
                 message.style.transition = "opacity 0.5s"; // Fade-out effect
                 message.style.opacity = "0"; // Make the message transparent
@@ -62,21 +59,19 @@ document.addEventListener("DOMContentLoaded", function () {
     if (achievementNotificationsContainer) {
         const achievementNotifications = achievementNotificationsContainer.querySelectorAll(".alert");
         achievementNotifications.forEach((notification) => {
-            // Add achievement-specific styles
             notification.style.backgroundColor = "#e0ffe0"; // Light green background
             notification.style.color = "#155724"; // Dark green text
             notification.style.fontWeight = "bold";
 
-            // Fade-out effect and removal after 3 seconds
             setTimeout(() => {
-                notification.style.transition = "opacity 0.5s"; // Fade-out effect
-                notification.style.opacity = "0"; // Make the notification transparent
+                notification.style.transition = "opacity 0.5s";
+                notification.style.opacity = "0";
                 setTimeout(() => {
                     if (notification && notification.parentNode) {
-                        notification.parentNode.remove(); // Remove the notification element
+                        notification.parentNode.remove();
                     }
-                }, 500); // Wait for fade-out to complete
-            }, 3000); // Notification visible for 3 seconds
+                }, 500);
+            }, 3000);
         });
     }
 
@@ -86,16 +81,22 @@ document.addEventListener("DOMContentLoaded", function () {
         answerInput.value = ""; // Clear the input field
     }
 
-    // Hamburger menu toggle
+    // Hamburger menu toggle with overlay
     const menuToggle = document.querySelector(".menu-toggle");
     const navLinks = document.querySelector(".nav-links");
+    const overlay = document.querySelector(".nav-overlay");
 
-    if (menuToggle && navLinks) {
+    if (menuToggle && navLinks && overlay) {
         menuToggle.addEventListener("click", function () {
-            const isActive = menuToggle.classList.toggle("active");
+            menuToggle.classList.toggle("active");
             navLinks.classList.toggle("active");
-            menuToggle.setAttribute("aria-expanded", isActive); // Update accessibility attribute
-            document.body.classList.toggle("no-scroll", isActive); // Prevent scrolling when active
+            overlay.classList.toggle("active");
+        });
+
+        overlay.addEventListener("click", function () {
+            menuToggle.classList.remove("active");
+            navLinks.classList.remove("active");
+            overlay.classList.remove("active");
         });
     }
 });

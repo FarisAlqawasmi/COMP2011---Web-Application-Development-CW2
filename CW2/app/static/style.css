@@ -510,7 +510,7 @@ input:invalid {
     flex-direction: column;
     cursor: pointer;
     margin-left: auto;
-    z-index: 1001; /* Ensure it stays above other elements */
+    z-index: 1002; /* Ensure it stays above other elements */
 }
 
 .menu-toggle .bar {
@@ -522,11 +522,31 @@ input:invalid {
     border-radius: 2px; /* Smooth rounded corners */
 }
 
+/* Nav links and overlay */
 .nav-links {
     display: flex;
     align-items: center;
     gap: 15px;
     z-index: 1000;
+}
+
+/* Overlay to darken the background when the menu is open */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 1001; /* Ensure it's below the menu but above the content */
+    display: none; /* Initially hidden */
+    opacity: 0; /* Start with no opacity */
+    transition: opacity 0.3s ease;
+}
+
+.nav-overlay.active {
+    display: block; /* Show when menu is active */
+    opacity: 1; /* Full opacity */
 }
 
 /* Navigation bar styling for smaller screens */
@@ -546,7 +566,7 @@ input:invalid {
         width: 100%;
         padding: 10px 0;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
+        z-index: 1002;
     }
 
     .nav-links.active {
@@ -565,6 +585,7 @@ input:invalid {
         color: #fff;
     }
 
+    /* Hamburger menu icon transformations */
     .menu-toggle.active .bar:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
