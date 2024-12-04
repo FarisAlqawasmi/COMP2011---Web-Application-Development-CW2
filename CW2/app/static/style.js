@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const logoutLink = document.querySelector("a[href='/logout']");
     if (logoutLink) {
         logoutLink.addEventListener("click", function (e) {
+            // Clear active states on logout
+            document.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
             const confirmLogout = confirm("Are you sure you want to log out?");
             if (!confirmLogout) {
                 e.preventDefault();
@@ -90,8 +92,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (menuToggle && navLinks) {
         menuToggle.addEventListener("click", function () {
-            menuToggle.classList.toggle("active");
+            const isActive = menuToggle.classList.toggle("active");
             navLinks.classList.toggle("active");
+            menuToggle.setAttribute("aria-expanded", isActive); // Update accessibility attribute
+            document.body.classList.toggle("no-scroll", isActive); // Prevent scrolling when active
         });
     }
 });
