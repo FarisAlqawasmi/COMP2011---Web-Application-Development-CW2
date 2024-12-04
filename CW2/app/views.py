@@ -439,10 +439,8 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
-    # Clear flash messages and notifications from the session
-    session.pop('notifications', None)
-    session.pop('_flashes', None)
-
+    # Clear all session data, including Flask-Login and custom session data
+    session.clear()
     logout_user()
     flash("You have been logged out.", "success")
     return redirect(url_for("landing"))
