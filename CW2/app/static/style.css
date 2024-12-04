@@ -521,7 +521,7 @@ input:invalid {
     }
 
     nav .btn-nav {
-        flex: 1 1 calc(45% - 10px); 
+        flex: 1 1 calc(33% - 10px); 
         text-align: center; 
         padding: 8px 5px; 
         font-size: 14px; 
