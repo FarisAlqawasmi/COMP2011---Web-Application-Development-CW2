@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="{{ url_for('static', filename='style.js') }}"></script>
-    <link rel="icon" type="'image/ico" href="{{ url_for('static', filename='calculator-icon.ico') }}">
+    <link rel="icon" type="image/ico" href="{{ url_for('static', filename='calculator-icon.ico') }}">
 </head>
 <body>
     <nav>
@@ -32,6 +32,7 @@
             </div>
         </div>
     </nav>
+    <div class="nav-overlay"></div> <!-- Overlay added here -->
 
     <!-- Flash Messages Container -->
     <div class="messages-container">

@@ -504,77 +504,58 @@ input:invalid {
     border-color: #34495e; 
 }
 
-/* General styling for hamburger menu */
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    margin-left: auto;
-}
-
-.menu-toggle .bar {
-    background-color: #34495e;
-    height: 3px;
-    width: 25px;
-    margin: 4px 0;
-    transition: 0.3s;
+/* General Styling for the Navbar */
+nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .nav-links {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    position: fixed;
-    top: 60px; /* Adjust based on your nav height */
-    right: 0;
-    background-color: #f4f4f4;
-    width: 100%;
-    padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Ensures the menu appears above other elements */
+    display: flex;
+    gap: 15px;
 }
 
-.nav-links.active {
+/* Hide the hamburger menu and ensure nav-links are visible by default on larger screens */
+.menu-toggle {
+    display: none;
+}
+
+.nav-links {
     display: flex;
 }
 
-.nav-links a {
-    color: #2c3e50;
-    padding: 10px 20px;
-    text-align: center;
-}
-
-.menu-toggle.active .bar:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.menu-toggle.active .bar:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle.active .bar:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
-}
-
-/* Navigation bar styling for smaller screens */
+/* For smaller screens (phones), show the hamburger menu and hide nav-links by default */
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex;
+        flex-direction: column;
+        cursor: pointer;
     }
-}
 
-/* Background overlay for navigation */
-.nav-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-    z-index: 999; /* Just below the menu */
-    display: none; /* Hidden by default */
-}
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        position: fixed;
+        top: 60px; /* Adjust based on your nav height */
+        right: 0;
+        background-color: #f4f4f4;
+        width: 100%;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000; /* Ensures the menu appears above other elements */
+    }
 
-.nav-overlay.active {
-    display: block;
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        color: #2c3e50;
+        padding: 10px 20px;
+        text-align: center;
+    }
 }

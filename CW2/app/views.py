@@ -94,6 +94,7 @@ def index():
         session['problem'] = problem
         session['solution'] = str(solution)
 
+    # Render the index.html template and pass the necessary variables
     return render_template(
         "index.html",
         username=current_user.username,
@@ -257,10 +258,17 @@ def next_question():
 @app.route("/leaderboard")
 @login_required
 def leaderboard():
+    """
+    Route for displaying the leaderboard.
+    Retrieves all users along with their scores from the database,
+    sorted in descending order of scores.
+    """
     users = db.session.query(User.username, Leaderboard.score) \
                       .join(Leaderboard, User.id == Leaderboard.user_id) \
                       .order_by(Leaderboard.score.desc()) \
                       .all()
+    # Render the leaderboard.html template and
+    # pass the list of users and scores
     return render_template("leaderboard.html", users=users)
 
 
@@ -304,17 +312,20 @@ def achievements():
         .all()
     )
 
+    # Calculate total achievements and unlocked achievements
     total_count = len(user_achievements)
     unlocked_count = sum(
         1 for _, user_achievement in user_achievements
         if user_achievement.completed
     )
+    # Calculate the percentage of achievements unlocked
     unlocked_percentage = (
         (unlocked_count / total_count * 100)
         if total_count > 0
         else 0
     )
 
+    # Render the "achievements.html" template and pass relevant data
     return render_template(
         "achievements.html",
         user_achievements=user_achievements,
@@ -404,6 +415,11 @@ def seed_achievements():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Handles the user login functionality.
+    Accepts username and password from the user,
+    verifies the credentials, and logs them in if valid.
+    """
     form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -448,6 +464,11 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    Handles user registration.
+    Displays the registration form for new users
+    and processes their input to create an account.
+    """
     form = RegisterForm()
     if request.method == "POST":
         if form.validate_on_submit():

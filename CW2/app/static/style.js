@@ -82,21 +82,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // Hamburger menu toggle with overlay
     const menuToggle = document.querySelector(".menu-toggle");
     const navLinks = document.querySelector(".nav-links");
-    const overlay = document.createElement("div");
-    overlay.classList.add("nav-overlay");
-    document.body.appendChild(overlay);
+    const overlay = document.querySelector(".nav-overlay");
 
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener("click", function () {
-            const isActive = navLinks.classList.toggle("active");
-            menuToggle.classList.toggle("active");
+    if (menuToggle && navLinks && overlay) {
+        const toggleMenu = (isActive) => {
+            navLinks.classList.toggle("active", isActive);
+            menuToggle.classList.toggle("active", isActive);
             overlay.classList.toggle("active", isActive);
+            menuToggle.setAttribute("aria-expanded", isActive);
+        };
+
+        menuToggle.addEventListener("click", () => {
+            toggleMenu(!navLinks.classList.contains("active"));
         });
 
-        overlay.addEventListener("click", function () {
-            navLinks.classList.remove("active");
-            menuToggle.classList.remove("active");
-            overlay.classList.remove("active");
+        overlay.addEventListener("click", () => {
+            toggleMenu(false);
         });
     }
 });
