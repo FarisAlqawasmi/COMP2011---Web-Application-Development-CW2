@@ -16,9 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
         deleteAccountButton.addEventListener("click", function (event) {
             const confirmDelete = confirm(deleteAccountButton.getAttribute("data-confirm"));
             if (confirmDelete) {
+                // If confirmed, submit the form programmatically
                 const form = deleteAccountButton.closest("form");
                 form.submit();
             } else {
+                // Prevent form submission if the user cancels
                 event.preventDefault();
             }
         });
@@ -40,15 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (flashMessagesContainer) {
         const flashMessages = flashMessagesContainer.querySelectorAll(".alert");
         flashMessages.forEach((message) => {
+            // Default behavior for normal flash messages
             setTimeout(() => {
-                message.style.transition = "opacity 0.5s";
-                message.style.opacity = "0";
+                message.style.transition = "opacity 0.5s"; // Fade-out effect
+                message.style.opacity = "0"; // Make the message transparent
                 setTimeout(() => {
                     if (message && message.parentNode) {
-                        message.parentNode.remove();
+                        message.parentNode.remove(); // Remove the message element
                     }
-                }, 500);
-            }, 3000);
+                }, 500); // Wait for fade-out to complete
+            }, 3000); // Message visible for 3 seconds
         });
     }
 
@@ -57,52 +60,38 @@ document.addEventListener("DOMContentLoaded", function () {
     if (achievementNotificationsContainer) {
         const achievementNotifications = achievementNotificationsContainer.querySelectorAll(".alert");
         achievementNotifications.forEach((notification) => {
-            notification.style.backgroundColor = "#e0ffe0";
-            notification.style.color = "#155724";
+            // Add achievement-specific styles
+            notification.style.backgroundColor = "#e0ffe0"; // Light green background
+            notification.style.color = "#155724"; // Dark green text
             notification.style.fontWeight = "bold";
 
+            // Fade-out effect and removal after 3 seconds
             setTimeout(() => {
-                notification.style.transition = "opacity 0.5s";
-                notification.style.opacity = "0";
+                notification.style.transition = "opacity 0.5s"; // Fade-out effect
+                notification.style.opacity = "0"; // Make the notification transparent
                 setTimeout(() => {
                     if (notification && notification.parentNode) {
-                        notification.parentNode.remove();
+                        notification.parentNode.remove(); // Remove the notification element
                     }
-                }, 500);
-            }, 3000);
+                }, 500); // Wait for fade-out to complete
+            }, 3000); // Notification visible for 3 seconds
         });
     }
 
     // Clear the answer input field on page load
     const answerInput = document.getElementById("answer");
     if (answerInput) {
-        answerInput.value = "";
+        answerInput.value = ""; // Clear the input field
     }
 
-    // Hamburger menu toggle with overlay
+    // Hamburger menu toggle
     const menuToggle = document.querySelector(".menu-toggle");
     const navLinks = document.querySelector(".nav-links");
-    const overlay = document.querySelector(".nav-overlay");
 
-    if (menuToggle && navLinks && overlay) {
-        // Toggle menu and overlay
-        const toggleMenu = (isActive) => {
-            navLinks.classList.toggle("active", isActive);
-            menuToggle.classList.toggle("active", isActive);
-            overlay.classList.toggle("active", isActive);
-            menuToggle.setAttribute("aria-expanded", isActive); // Accessibility
-        };
-
-        // Open/close menu when the hamburger icon is clicked
-        menuToggle.addEventListener("click", () => {
-            toggleMenu(!navLinks.classList.contains("active"));
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener("click", function () {
+            menuToggle.classList.toggle("active");
+            navLinks.classList.toggle("active");
         });
-
-        // Close menu when overlay is clicked
-        overlay.addEventListener("click", () => {
-            toggleMenu(false);
-        });
-    } else {
-        console.error("Hamburger menu elements not found in DOM.");
     }
 });
