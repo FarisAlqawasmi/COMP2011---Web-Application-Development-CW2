@@ -10,29 +10,29 @@
     <link rel="icon" type="image/ico" href="{{ url_for('static', filename='calculator-icon.ico') }}">
 </head>
 <body>
-    <nav>
+    <nav role="navigation">
         <div class="container">
             <h1>Math Problem Generator</h1>
-            <div class="menu-toggle" id="mobile-menu">
+            <div class="menu-toggle" id="mobile-menu" aria-label="Toggle Navigation Menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </div>
-            <div class="nav-links">
+            <div class="nav-links" role="menu">
                 {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('index') }}" class="btn-nav">Home</a>
-                    <a href="{{ url_for('leaderboard') }}" class="btn-nav">Leaderboard</a>
-                    <a href="{{ url_for('achievements') }}" class="btn-nav">Achievements</a>
-                    <a href="{{ url_for('profile') }}" class="btn-nav">Profile</a>
-                    <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
+                    <a href="{{ url_for('index') }}" class="btn-nav" role="menuitem">Home</a>
+                    <a href="{{ url_for('leaderboard') }}" class="btn-nav" role="menuitem">Leaderboard</a>
+                    <a href="{{ url_for('achievements') }}" class="btn-nav" role="menuitem">Achievements</a>
+                    <a href="{{ url_for('profile') }}" class="btn-nav" role="menuitem">Profile</a>
+                    <a href="{{ url_for('logout') }}" class="btn-nav" role="menuitem">Logout</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="btn-nav">Login</a>
-                    <a href="{{ url_for('register') }}" class="btn-nav">Register</a>
+                    <a href="{{ url_for('login') }}" class="btn-nav" role="menuitem">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn-nav" role="menuitem">Register</a>
                 {% endif %}
             </div>
         </div>
     </nav>
-    <div class="nav-overlay"></div> <!-- Overlay added here -->
+    <div class="nav-overlay"></div>
 
     <!-- Flash Messages Container -->
     <div class="messages-container">

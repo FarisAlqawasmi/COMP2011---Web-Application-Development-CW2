@@ -85,19 +85,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.querySelector(".nav-overlay");
 
     if (menuToggle && navLinks && overlay) {
+        // Toggle menu and overlay
         const toggleMenu = (isActive) => {
             navLinks.classList.toggle("active", isActive);
             menuToggle.classList.toggle("active", isActive);
             overlay.classList.toggle("active", isActive);
-            menuToggle.setAttribute("aria-expanded", isActive);
+            menuToggle.setAttribute("aria-expanded", isActive); // Accessibility
         };
 
+        // Open/close menu when the hamburger icon is clicked
         menuToggle.addEventListener("click", () => {
             toggleMenu(!navLinks.classList.contains("active"));
         });
 
+        // Close menu when overlay is clicked
         overlay.addEventListener("click", () => {
             toggleMenu(false);
         });
+    } else {
+        console.error("Hamburger menu elements not found in DOM.");
     }
 });
