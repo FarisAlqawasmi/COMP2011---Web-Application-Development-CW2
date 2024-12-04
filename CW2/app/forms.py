@@ -27,6 +27,24 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log In')
 
 
+class EditForm(FlaskForm):
+    username = StringField("Username", validators=[
+            DataRequired(), Length(min=3, max=20)]
+    )
+    email = StringField("Email", validators=[
+            DataRequired(), Email()]
+    )
+    new_password = PasswordField("New Password", validators=[
+            DataRequired()]
+    )
+    confirm_new_password = PasswordField(
+        "Confirm New Password", validators=[
+            DataRequired(),
+            EqualTo("new_password", message="Passwords must match.")]
+    )
+    submit = SubmitField("Save Changes")
+
+
 class SolveMathForm(FlaskForm):
     answer = StringField('Your Answer', validators=[DataRequired()])
     submit = SubmitField('Submit Answer')

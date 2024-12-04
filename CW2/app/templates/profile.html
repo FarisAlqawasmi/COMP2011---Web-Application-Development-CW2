@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Your Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Your Profile</h2>
+
+    <!-- Save Changes Form -->
+    <form action="{{ url_for('profile') }}" method="post">
+        {{ form.hidden_tag() }}
+
+        <!-- Username -->
+        <div class="form-group mb-3">
+            <label for="username">Username</label>
+            {{ form.username(class="form-control", value=current_user.username) }}
+            {% if form.username.errors %}
+                <div class="text-danger mt-1">{{ form.username.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Email -->
+        <div class="form-group mb-3">
+            <label for="email">Email</label>
+            {{ form.email(class="form-control", value=current_user.email) }}
+            {% if form.email.errors %}
+                <div class="text-danger mt-1">{{ form.email.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <!-- New Password -->
+        <div class="form-group mb-3">
+            <label for="new_password">New Password</label>
+            {{ form.new_password(class="form-control") }}
+            {% if form.new_password.errors %}
+                <div class="text-danger mt-1">{{ form.new_password.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Confirm New Password -->
+        <div class="form-group mb-3">
+            <label for="confirm_new_password">Confirm New Password</label>
+            {{ form.confirm_new_password(class="form-control") }}
+            {% if form.confirm_new_password.errors %}
+                <div class="text-danger mt-1">{{ form.confirm_new_password.errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Save Changes Button -->
+        <div class="button-group">
+            <button type="submit" class="btn save-btn">Save Changes</button>
+        </div>
+    </form>
+
+    <!-- Delete Account Form -->
+    <form action="{{ url_for('delete_account') }}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="button-group">
+            <button type="submit" class="btn delete-account-btn" data-confirm="Are you sure you want to delete your account? This action cannot be undone.">Delete Account</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

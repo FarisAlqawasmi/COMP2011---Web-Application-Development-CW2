@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, session
 from flask_login import login_required, current_user, login_user, logout_user
 from app import app, db
 from app.models import Leaderboard, User, Achievement, UserAchievement
-from app.forms import RegisterForm, LoginForm
+from app.forms import RegisterForm, LoginForm, EditForm
 from mathgenerator import genById
 from sympy import sympify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -12,7 +12,7 @@ import random
 
 # Your desired generator IDs
 selected_generator_ids = [
-    0, 1, 2, 3, 6, 8, 11, 12, 13, 28, 31
+    0, 1, 2, 3, 6, 8, 12, 13, 28, 31
 ]
 
 
@@ -100,7 +100,7 @@ def index():
         problem=session['problem'],
         feedback=feedback,
         show_variable_note=(
-            'x' in session['problem']
+            False
         ),
         show_fraction_note=(
             '/' in session['problem'] or '\\frac' in session['problem']
@@ -491,3 +491,60 @@ def register():
                 return redirect(url_for("register"))
 
     return render_template("register.html", form=form)
+
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    form = EditForm()
+
+    if form.validate_on_submit():
+        # Update user details
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        if form.new_password.data:
+            current_user.password = generate_password_hash(
+                form.new_password.data
+            )
+
+        db.session.commit()
+        flash("Your profile has been updated!", "success")
+
+        # Redirect to the Home page after successful update
+        return redirect(url_for("index"))
+
+    # Pre-fill form with current user details for GET requests
+    if request.method == "GET":
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    return render_template("profile.html", form=form)
+
+
+@app.route("/delete_account", methods=["POST"])
+@login_required
+def delete_account():
+    try:
+        # Delete the current user from the database
+        db.session.delete(current_user)
+        db.session.commit()
+
+        # Clear existing flash messages
+        session.pop('_flashes', None)
+
+        # Flash a success message
+        flash("Your account has been successfully deleted.", "success")
+
+        # Redirect to the landing page
+        return redirect(url_for("landing"))
+    except Exception as e:
+        # Print the exception for debugging
+        print(f"Error during account deletion: {e}")
+
+        # Flash an error message if something goes wrong
+        flash(
+            "An error occurred while deleting your account. "
+            "Please try again.",
+            "danger"
+        )
+        return redirect(url_for("profile"))

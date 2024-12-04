@@ -171,6 +171,14 @@ form button:hover {
     transition: 0.3s ease;
 }
 
+/* Button group for horizontal alignment */
+.button-group {
+    display: flex; /* Arrange buttons horizontally */
+    gap: 15px; /* Add space between buttons */
+    justify-content: flex-start; /* Align buttons to the left */
+    margin-top: 20px; /* Optional: Add spacing above the button group */
+}
+
 /* Add vertical alignment for all input fields */
 form div {
     display: flex;

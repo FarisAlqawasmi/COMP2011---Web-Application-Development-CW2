@@ -10,6 +10,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Confirmation before deleting the account
+    const deleteAccountButton = document.querySelector(".delete-account-btn");
+    if (deleteAccountButton) {
+        deleteAccountButton.addEventListener("click", function (event) {
+            const confirmDelete = confirm(deleteAccountButton.getAttribute("data-confirm"));
+            if (confirmDelete) {
+                // If confirmed, submit the form programmatically
+                const form = deleteAccountButton.closest("form");
+                form.submit();
+            } else {
+                // Prevent form submission if the user cancels
+                event.preventDefault();
+            }
+        });
+    }
+
     // Highlight leaderboard entries
     const leaderboardItems = document.querySelectorAll("ol li");
     leaderboardItems.forEach((item) => {
@@ -39,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
     // Handle achievement-specific notifications
     const achievementNotificationsContainer = document.querySelector(".achievement-notifications");
     if (achievementNotificationsContainer) {
@@ -62,10 +77,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 3000); // Notification visible for 3 seconds
         });
     }
-});
 
-// Clear the answer input field on page load
-const answerInput = document.getElementById("answer");
-if (answerInput) {
-    answerInput.value = ""; // Clear the input field
-}
+    // Clear the answer input field on page load
+    const answerInput = document.getElementById("answer");
+    if (answerInput) {
+        answerInput.value = ""; // Clear the input field
+    }
+});
