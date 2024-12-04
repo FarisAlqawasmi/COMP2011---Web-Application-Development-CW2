@@ -521,9 +521,39 @@ input:invalid {
 }
 
 .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    position: fixed;
+    top: 60px; /* Adjust based on your nav height */
+    right: 0;
+    background-color: #f4f4f4;
+    width: 100%;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures the menu appears above other elements */
+}
+
+.nav-links.active {
     display: flex;
-    align-items: center;
-    gap: 15px;
+}
+
+.nav-links a {
+    color: #2c3e50;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.menu-toggle.active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
 }
 
 /* Navigation bar styling for smaller screens */
@@ -531,39 +561,20 @@ input:invalid {
     .menu-toggle {
         display: flex;
     }
+}
 
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        gap: 10px;
-        position: absolute;
-        top: 60px; /* Adjust based on your nav height */
-        right: 0;
-        background-color: #f4f4f4;
-        width: 100%;
-        padding: 10px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+/* Background overlay for navigation */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    z-index: 999; /* Just below the menu */
+    display: none; /* Hidden by default */
+}
 
-    .nav-links.active {
-        display: flex;
-    }
-
-    .nav-links a {
-        color: #2c3e50;
-        padding: 10px 20px;
-        text-align: center;
-    }
-
-    .menu-toggle.active .bar:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .menu-toggle.active .bar:nth-child(2) {
-        opacity: 0;
-    }
-
-    .menu-toggle.active .bar:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-    }
+.nav-overlay.active {
+    display: block;
 }

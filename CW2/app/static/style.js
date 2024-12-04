@@ -16,11 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
         deleteAccountButton.addEventListener("click", function (event) {
             const confirmDelete = confirm(deleteAccountButton.getAttribute("data-confirm"));
             if (confirmDelete) {
-                // If confirmed, submit the form programmatically
                 const form = deleteAccountButton.closest("form");
                 form.submit();
             } else {
-                // Prevent form submission if the user cancels
                 event.preventDefault();
             }
         });
@@ -42,16 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (flashMessagesContainer) {
         const flashMessages = flashMessagesContainer.querySelectorAll(".alert");
         flashMessages.forEach((message) => {
-            // Default behavior for normal flash messages
             setTimeout(() => {
-                message.style.transition = "opacity 0.5s"; // Fade-out effect
-                message.style.opacity = "0"; // Make the message transparent
+                message.style.transition = "opacity 0.5s";
+                message.style.opacity = "0";
                 setTimeout(() => {
                     if (message && message.parentNode) {
-                        message.parentNode.remove(); // Remove the message element
+                        message.parentNode.remove();
                     }
-                }, 500); // Wait for fade-out to complete
-            }, 3000); // Message visible for 3 seconds
+                }, 500);
+            }, 3000);
         });
     }
 
@@ -60,38 +57,46 @@ document.addEventListener("DOMContentLoaded", function () {
     if (achievementNotificationsContainer) {
         const achievementNotifications = achievementNotificationsContainer.querySelectorAll(".alert");
         achievementNotifications.forEach((notification) => {
-            // Add achievement-specific styles
-            notification.style.backgroundColor = "#e0ffe0"; // Light green background
-            notification.style.color = "#155724"; // Dark green text
+            notification.style.backgroundColor = "#e0ffe0";
+            notification.style.color = "#155724";
             notification.style.fontWeight = "bold";
 
-            // Fade-out effect and removal after 3 seconds
             setTimeout(() => {
-                notification.style.transition = "opacity 0.5s"; // Fade-out effect
-                notification.style.opacity = "0"; // Make the notification transparent
+                notification.style.transition = "opacity 0.5s";
+                notification.style.opacity = "0";
                 setTimeout(() => {
                     if (notification && notification.parentNode) {
-                        notification.parentNode.remove(); // Remove the notification element
+                        notification.parentNode.remove();
                     }
-                }, 500); // Wait for fade-out to complete
-            }, 3000); // Notification visible for 3 seconds
+                }, 500);
+            }, 3000);
         });
     }
 
     // Clear the answer input field on page load
     const answerInput = document.getElementById("answer");
     if (answerInput) {
-        answerInput.value = ""; // Clear the input field
+        answerInput.value = "";
     }
 
-    // Hamburger menu toggle
+    // Hamburger menu toggle with overlay
     const menuToggle = document.querySelector(".menu-toggle");
     const navLinks = document.querySelector(".nav-links");
+    const overlay = document.createElement("div");
+    overlay.classList.add("nav-overlay");
+    document.body.appendChild(overlay);
 
     if (menuToggle && navLinks) {
         menuToggle.addEventListener("click", function () {
+            const isActive = navLinks.classList.toggle("active");
             menuToggle.classList.toggle("active");
-            navLinks.classList.toggle("active");
+            overlay.classList.toggle("active", isActive);
+        });
+
+        overlay.addEventListener("click", function () {
+            navLinks.classList.remove("active");
+            menuToggle.classList.remove("active");
+            overlay.classList.remove("active");
         });
     }
 });
