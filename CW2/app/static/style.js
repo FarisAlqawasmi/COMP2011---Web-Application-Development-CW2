@@ -83,4 +83,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (answerInput) {
         answerInput.value = ""; // Clear the input field
     }
+
+    // Hamburger menu toggle
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener("click", function () {
+            menuToggle.classList.toggle("active");
+            navLinks.classList.toggle("active");
+        });
+    }
 });

@@ -504,28 +504,66 @@ input:invalid {
     border-color: #34495e; 
 }
 
+/* General styling for hamburger menu */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.menu-toggle .bar {
+    background-color: #34495e;
+    height: 3px;
+    width: 25px;
+    margin: 4px 0;
+    transition: 0.3s;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 /* Navigation bar styling for smaller screens */
 @media (max-width: 768px) {
-    nav .container {
+    .menu-toggle {
         display: flex;
-        flex-wrap: wrap; 
-        justify-content: center; 
-        gap: 5px; 
-        padding: 5px; 
     }
 
-    nav .container h1 {
-        flex-basis: 100%; 
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        position: absolute;
+        top: 60px; /* Adjust based on your nav height */
+        right: 0;
+        background-color: #f4f4f4;
+        width: 100%;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        color: #2c3e50;
+        padding: 10px 20px;
         text-align: center;
-        margin-bottom: 10px; 
     }
 
-    nav .btn-nav {
-        flex: 1 1 calc(33% - 10px); 
-        text-align: center; 
-        padding: 8px 5px; 
-        font-size: 14px; 
-        margin: 2px; 
-        box-sizing: border-box;
+    .menu-toggle.active .bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active .bar:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
     }
 }

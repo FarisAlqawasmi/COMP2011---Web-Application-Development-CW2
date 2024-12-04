@@ -13,7 +13,12 @@
     <nav>
         <div class="container">
             <h1>Math Problem Generator</h1>
-            <div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="nav-links">
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('index') }}" class="btn-nav">Home</a>
                     <a href="{{ url_for('leaderboard') }}" class="btn-nav">Leaderboard</a>
