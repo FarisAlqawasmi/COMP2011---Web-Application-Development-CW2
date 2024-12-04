@@ -405,6 +405,7 @@ def seed_achievements():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    session.clear()  # Clear lingering session data to prevent interference
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
@@ -412,26 +413,18 @@ def login():
         # Fetch the user by username
         user = User.query.filter_by(username=username).first()
 
-        if user:
-            # Verify the hashed password
-            if check_password_hash(user.password, password):
-                login_user(user)
-                flash("Logged in successfully.", "success")
-                return redirect(url_for("index"))
-            else:
-                flash(
-                    "The password you entered is incorrect. "
-                    "Please try again.",
-                    "error"
-                )
-                return redirect(url_for("login"))
+        if user and check_password_hash(user.password, password):
+            login_user(user, remember=False)  # Avoid persistent sessions
+            flash("Logged in successfully.", "success")
+            return redirect(url_for("index"))
+        elif user:
+            flash("The password you entered is incorrect. Please try again.", "error")
         else:
             flash(
-                "The username entered is not found in our database. "
-                "Perhaps you haven't registered?",
-                "error"
+                "The username entered is not found in our database. Perhaps you haven't registered?",
+                "error",
             )
-            return redirect(url_for("register"))
+        return redirect(url_for("login"))
 
     return render_template("login.html", form=form)
 
@@ -440,10 +433,10 @@ def login():
 @login_required
 def logout():
     # Clear all session data, including Flask-Login and custom session data
-    session.clear()
-    logout_user()
+    logout_user()  # Logs out the user
+    session.clear()  # Clears Flask session data
     flash("You have been logged out.", "success")
-    return redirect(url_for("landing"))
+    return redirect(url_for("landing"))  # Redirect to landing page
 
 
 @app.route("/register", methods=["GET", "POST"])
